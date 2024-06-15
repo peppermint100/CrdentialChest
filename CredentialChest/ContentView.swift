@@ -13,7 +13,7 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Hello".localized)
         }
         .padding()
     }
@@ -21,4 +21,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(\.locale, .init(identifier: "en"))
 }
