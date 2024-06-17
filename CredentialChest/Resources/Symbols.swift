@@ -5,4 +5,9 @@
 //  Created by peppermint100 on 6/15/24.
 //
 
-import Foundation
+import SwiftUI
+
+enum Symbols {
+    static let pin = Image(systemName: "pin")
+    static let pinFill = Image(systemName: "pin.fill")
+}
