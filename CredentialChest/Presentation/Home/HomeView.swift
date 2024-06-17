@@ -14,7 +14,7 @@ struct HomeView: View {
     
     init(vm: HomeViewModel) {
         self.vm = vm
-        vm.getItems()
+        vm.getiCloudStatus()
     }
     
     var body: some View {
@@ -24,19 +24,21 @@ struct HomeView: View {
             
             NavigationStack(path: $router.path) {
                 GeometryReader { geo in
-                    List {
-                        ForEach(vm.categorizedCredentials) { credentials in
-                            if !credentials.items.isEmpty {
-                                Section(header: Text(credentials.prefix)) {
-                                    ForEach(credentials.items, id: \.id) { item in
-                                        CredentialItemRowView(item: item)
-                                            .onTapGesture {
-                                                router.push(.detail(item))
-                                            }
-                                    }
-                                }
-                            }
+                    if vm.iCloudAllowed {
+                        credentials
+                    } else {
+                        VStack(alignment: .center) {
+                            Spacer()
+                            Text("Check iCloud Status".localized)
+                                .font(.title3)
+                                .foregroundStyle(Color.secondaryLabel)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            refreshiCloudButton
+                            Spacer()
                         }
+                        .padding()
+                        .frame(width: geo.size.width)
                     }
                 }
                 .navigationDestination(for: HomeRouter.Page.self) { page in
@@ -50,4 +52,34 @@ struct HomeView: View {
 #Preview {
     HomeRouter().build(.root)
         .environmentObject(HomeRouter())
+}
+
+private extension HomeView {
+    var refreshiCloudButton: some View {
+        Button(action: {
+            vm.getiCloudStatus()
+        }, label: {
+            Symbols.arrowClockwise
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20)
+        })
+    }
+    
+    var credentials: some View {
+        List {
+            ForEach(vm.categorizedCredentials) { credentials in
+                if !credentials.items.isEmpty {
+                    Section(header: Text(credentials.prefix)) {
+                        ForEach(credentials.items, id: \.id) { item in
+                            CredentialItemRowView(item: item)
+                                .onTapGesture {
+                                    router.push(.detail(item))
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -11,6 +11,9 @@ final class HomeViewModel: ObservableObject {
     
     @Published var searchText = ""
     @Published var categorizedCredentials: [AlaphabetItem] = []
+    @Published var iCloudAllowed = false
+    
+    private let cancelBag = CancelBag()
     
     func getItems() {
         let itemsInDB = PreviewMockData.credentialItems
@@ -26,5 +29,45 @@ final class HomeViewModel: ObservableObject {
         }
         
         categorizedCredentials = sortedItems
+    }
+    
+    private func requestiCloudPermission() {
+        CloudKitUtility.requestApplicationPermission()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure:
+                    self?.iCloudAllowed = false
+                }
+            } receiveValue: { [weak self] success in
+                if success {
+                    self?.iCloudAllowed = true
+                    self?.getItems()
+                } else {
+                    self?.iCloudAllowed = false
+                }
+            }
+            .store(in: cancelBag)
+    }
+    
+    func getiCloudStatus() {
+        CloudKitUtility.getiCloudStatus()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure:
+                    self?.requestiCloudPermission()
+                }
+            } receiveValue: { [weak self] success in
+                if success {
+                    self?.iCloudAllowed = true
+                    self?.getItems()
+                }
+            }
+            .store(in: cancelBag)
     }
 }
