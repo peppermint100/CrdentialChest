@@ -10,6 +10,7 @@ import SwiftUI
 class HomeRouter: ObservableObject {
     
     @Published var path = NavigationPath()
+    @Published var sheet: Sheet?
     
     let assembler: HomeAssembler = DefaultAssembler()
     
@@ -31,6 +32,14 @@ class HomeRouter: ObservableObject {
         }
     }
     
+    enum Sheet: String, Identifiable {
+        case compose
+        
+        var id: String {
+            self.rawValue
+        }
+    }
+    
     @ViewBuilder
     func build(_ page: Page) -> some View {
         switch page {
@@ -40,6 +49,22 @@ class HomeRouter: ObservableObject {
         case .detail(let item):
             Text(item.title)
         }
+    }
+    
+    @ViewBuilder
+    func build(_ sheet: Sheet) -> some View {
+        switch sheet {
+        case .compose:
+            CredentialComposeView()
+        }
+    }
+    
+    func present(_ sheet: Sheet) {
+        self.sheet = sheet
+    }
+    
+    func dismiss() {
+        self.sheet = nil
     }
     
     func push(_ page: Page) {

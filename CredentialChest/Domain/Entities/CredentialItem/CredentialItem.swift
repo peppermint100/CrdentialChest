@@ -13,7 +13,7 @@ protocol CredentialItem {
     var memo: String { get set }
     var symbolString: String { get set }
     var symbolColor: Color { get set }
-    var images: [Image] { get set }
+    var images: [UIImage] { get set }
     var isPinned: Bool { get set }
 }
 

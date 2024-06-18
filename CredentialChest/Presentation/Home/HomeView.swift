@@ -15,6 +15,9 @@ struct HomeView: View {
     init(vm: HomeViewModel) {
         self.vm = vm
         vm.getiCloudStatus()
+        
+        // TODO: 테스트용
+        vm.getItems()
     }
     
     var body: some View {
@@ -22,27 +25,30 @@ struct HomeView: View {
             Color.systemBackground
                 .ignoresSafeArea()
             
-            NavigationStack(path: $router.path) {
-                GeometryReader { geo in
-                    if vm.iCloudAllowed {
+            GeometryReader { geo in
+                // TODO: 테스트용 ! 지울 것
+                if vm.iCloudAllowed {
+                    NavigationStack(path: $router.path) {
                         credentials
-                    } else {
-                        VStack(alignment: .center) {
-                            Spacer()
-                            Text("Check iCloud Status".localized)
-                                .font(.title3)
-                                .foregroundStyle(Color.secondaryLabel)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                            refreshiCloudButton
-                            Spacer()
-                        }
-                        .padding()
-                        .frame(width: geo.size.width)
+                            .navigationDestination(for: HomeRouter.Page.self) { page in
+                                router.build(page)
+                            }
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button(action: {
+                                        router.present(.compose)
+                                    }, label: {
+                                        Symbols.plus
+                                    })
+                                }
+                            }
+                            .sheet(item: $router.sheet) { sheet in
+                                router.build(sheet)
+                            }
                     }
-                }
-                .navigationDestination(for: HomeRouter.Page.self) { page in
-                    router.build(page)
+                } else {
+                    iCloudRefresh
+                        .frame(width: geo.size.width)
                 }
             }
         }
@@ -55,15 +61,26 @@ struct HomeView: View {
 }
 
 private extension HomeView {
-    var refreshiCloudButton: some View {
-        Button(action: {
-            vm.getiCloudStatus()
-        }, label: {
-            Symbols.arrowClockwise
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20)
-        })
+    
+    var iCloudRefresh: some View {
+        VStack {
+            Spacer()
+            Text("Check iCloud Status".localized)
+                .font(.title3)
+                .foregroundStyle(Color.secondaryLabel)
+                .multilineTextAlignment(.center)
+                .padding()
+            Button(action: {
+                vm.getiCloudStatus()
+            }, label: {
+                Symbols.arrowClockwise
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20)
+            })
+            Spacer()
+        }
+        .padding()
     }
     
     var credentials: some View {
@@ -73,6 +90,7 @@ private extension HomeView {
                     Section(header: Text(credentials.prefix)) {
                         ForEach(credentials.items, id: \.id) { item in
                             CredentialItemRowView(item: item)
+                                .contentShape(Rectangle())
                                 .onTapGesture {
                                     router.push(.detail(item))
                                 }

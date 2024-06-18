@@ -9,14 +9,23 @@ import Foundation
 
 final class HomeViewModel: ObservableObject {
     
+    private let credentialItemUseCase: CredentialItemUseCase
+    
     @Published var searchText = ""
     @Published var categorizedCredentials: [AlaphabetItem] = []
     @Published var iCloudAllowed = false
     
     private let cancelBag = CancelBag()
     
+    init(credentialItemUseCase: CredentialItemUseCase) {
+        self.credentialItemUseCase = credentialItemUseCase
+    }
+}
+
+extension HomeViewModel {
+    
     func getItems() {
-        let itemsInDB = PreviewMockData.credentialItems
+        let itemsInDB = credentialItemUseCase.fetch()
         var sortedItems = AlaphabetSupport.generateEmptyAlaphabetItems()
         
         for item in itemsInDB {
