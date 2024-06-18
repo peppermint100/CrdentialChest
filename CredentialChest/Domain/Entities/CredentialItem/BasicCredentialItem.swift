@@ -13,8 +13,47 @@ struct BasicCredentialItem: CredentialItem, Identifiable {
     var memo: String
     var symbolString: String
     var symbolColor: Color
-    var images: [Image]
+    var images: [UIImage]
     var isPinned: Bool
     
     var password: String
+    
+    init(id: UUID, title: String, memo: String, symbolString: String, symbolColor: Color, images: [UIImage], isPinned: Bool, password: String) {
+        self.id = id
+        self.title = title
+        self.memo = memo
+        self.symbolString = symbolString
+        self.symbolColor = symbolColor
+        self.images = images
+        self.isPinned = isPinned
+        self.password = password
+    }
+    
+    init?(from entity: BasicCredentialItemEntity) {
+        let r = entity.r
+        let g = entity.g
+        let b = entity.b
+        let a = entity.a
+        let isPinned = entity.isPinned
+        if let id = entity.id,
+           let title = entity.title,
+           let memo = entity.memo,
+           let symbolString = entity.symbolString,
+           let imagesData = entity.images,
+           let password = entity.password {
+            self.id = id
+            self.title = title
+            self.memo = memo
+            self.symbolString = symbolString
+            self.symbolColor = Color(red: r, green: g, blue: b, opacity: a)
+            self.images = imagesData.compactMap { data in
+                guard let imageData = data as? Data else { return nil }
+                return UIImage(data: imageData)
+            }
+            self.isPinned = isPinned
+            self.password = password
+        } else {
+            return nil
+        }
+    }
 }
