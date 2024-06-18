@@ -9,6 +9,11 @@ import Foundation
 import CloudKit
 import Combine
 
+protocol CloudKitableItem {
+    init?(record: CKRecord)
+    var record: CKRecord { get }
+}
+
 class CloudKitUtility {
     
     enum CloudKitError: String, LocalizedError {
