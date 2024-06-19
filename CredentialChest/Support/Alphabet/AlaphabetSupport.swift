@@ -14,12 +14,14 @@ enum AlaphabetSupport {
         "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ",
         "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"
     ]
+    
+    static let etc = "etc"
 }
 
 extension AlaphabetSupport {
     
     static func generateEmptyAlaphabetItems() -> [AlaphabetItem] {
-        let alphabet = AlaphabetSupport.alphabetEn + AlaphabetSupport.alphabetKo + ["etc"]
+        let alphabet = AlaphabetSupport.alphabetEn + AlaphabetSupport.alphabetKo + [AlaphabetSupport.etc]
         return alphabet.map {
             AlaphabetItem(prefix: $0, items: [])
         }

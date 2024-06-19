@@ -32,8 +32,17 @@ extension String {
 
 extension String {
     var chosung: String {
-        let octal = self.unicodeScalars[self.unicodeScalars.startIndex].value
-        let index = (octal - 0xac00) / 28 / 21
-        return AlaphabetSupport.alphabetKo[Int(index)]
+        guard let firstCharacter = self.first else {
+            return AlaphabetSupport.etc
+        }
+        
+        let unicodeValue = firstCharacter.unicodeScalars.first!.value
+        
+        if unicodeValue >= 0xAC00 && unicodeValue <= 0xD7A3 {
+            let index = (unicodeValue - 0xAC00) / 28 / 21
+            return AlaphabetSupport.alphabetKo[Int(index)]
+        }
+        
+        return AlaphabetSupport.etc
     }
 }
