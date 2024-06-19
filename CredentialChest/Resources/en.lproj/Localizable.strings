@@ -6,5 +6,23 @@
   
 */
 
+
+// Home
 "Check iCloud Status" = "Please check iCloud is allowed to use in application.";
 "Refresh" = "Refresh";
+
+// Compose
+"Enter Title Here" = "Enter title here";
+"Title" = "Title";
+"Complete" = "Complete";
+"New Credential" = "New Credential";
+"Edit Credential" = "Edit Credential";
+"Memo" = "Memo";
+"Add Memo" = "Add Memo";
+"Pin To Top" = "Pin to top";
+"Add Image" = "Add Image";
+"Basic" = "Basic";
+
+// Basic Compose
+"Information" = "Information";
+"Enter Your Credential Here" = "Enter Your Credential Here";
