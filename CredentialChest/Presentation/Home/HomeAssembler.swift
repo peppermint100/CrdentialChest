@@ -7,13 +7,7 @@
 
 import Foundation
 
-protocol HomeAssembler {
-    func resolve() -> HomeViewModel
-    func resolve() -> CredentialItemUseCase
-    func resolve() -> CredentialItemRepository
-}
-
-extension HomeAssembler {
+final class HomeAssembler {
     
     func resolve() -> HomeViewModel {
         return HomeViewModel(credentialItemUseCase: resolve())
@@ -23,7 +17,7 @@ extension HomeAssembler {
         return CredentialItemUseCase(repository: resolve())
     }
     
-    func resolve() -> CredentialItemRepository {
+    func resolve() -> BasicCredentialItemRepository {
         return BasicCredentialItemRepository()
     }
 }
