@@ -28,4 +28,16 @@ extension CredentialItem {
             return ""
         }
     }
+    
+    func cast() -> CredentialItemType {
+        if let _ = self as? BasicCredentialItem {
+            return .basic
+        }
+        
+        return .basic
+    }
+}
+
+enum CredentialItemType {
+    case basic
 }

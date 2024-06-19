@@ -12,7 +12,7 @@ class HomeRouter: ObservableObject {
     @Published var path = NavigationPath()
     @Published var sheet: Sheet?
     
-    let assembler: HomeAssembler = DefaultAssembler()
+    let assembler: HomeAssembler = HomeAssembler()
     
     enum Page: Hashable {
         case root
@@ -32,11 +32,15 @@ class HomeRouter: ObservableObject {
         }
     }
     
-    enum Sheet: String, Identifiable {
-        case compose
+    enum Sheet: Identifiable {
+        
+        case compose(item: CredentialItem?)
         
         var id: String {
-            self.rawValue
+            switch self {
+            case .compose(let item):
+                return item?.id.uuidString ?? ""
+            }
         }
     }
     
@@ -53,9 +57,13 @@ class HomeRouter: ObservableObject {
     
     @ViewBuilder
     func build(_ sheet: Sheet) -> some View {
+        let credentialAssembler = CredentialComposeAssembler()
         switch sheet {
-        case .compose:
-            CredentialComposeView()
+        case .compose(let item):
+            if let item = item as? BasicCredentialItem {
+                BasicCredentialComposeView(vm: credentialAssembler.resolve(item: item))
+                    .environmentObject(self)
+            }
         }
     }
     

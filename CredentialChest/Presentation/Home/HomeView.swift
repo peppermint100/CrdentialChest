@@ -15,9 +15,6 @@ struct HomeView: View {
     init(vm: HomeViewModel) {
         self.vm = vm
         vm.getiCloudStatus()
-        
-        // TODO: 테스트용
-        vm.getItems()
     }
     
     var body: some View {
@@ -26,7 +23,6 @@ struct HomeView: View {
                 .ignoresSafeArea()
             
             GeometryReader { geo in
-                // TODO: 테스트용 ! 지울 것
                 if vm.iCloudAllowed {
                     NavigationStack(path: $router.path) {
                         credentials
@@ -35,14 +31,15 @@ struct HomeView: View {
                             }
                             .toolbar {
                                 ToolbarItem(placement: .topBarTrailing) {
-                                    Button(action: {
-                                        router.present(.compose)
-                                    }, label: {
+                                    
+                                    Menu {
+                                        basicCompose
+                                    } label: {
                                         Symbols.plus
-                                    })
+                                    }
                                 }
                             }
-                            .sheet(item: $router.sheet) { sheet in
+                            .sheet(item: $router.sheet, onDismiss: { vm.getItems() }) { sheet in
                                 router.build(sheet)
                             }
                     }
@@ -90,7 +87,6 @@ private extension HomeView {
                     Section(header: Text(credentials.prefix)) {
                         ForEach(credentials.items, id: \.id) { item in
                             CredentialItemRowView(item: item)
-                                .contentShape(Rectangle())
                                 .onTapGesture {
                                     router.push(.detail(item))
                                 }
@@ -99,5 +95,13 @@ private extension HomeView {
                 }
             }
         }
+    }
+    
+    var basicCompose: some View {
+        Button(action: {
+            router.present(.compose(item: BasicCredentialItem()))
+        }, label: {
+            Text("Basic".localized)
+        })
     }
 }

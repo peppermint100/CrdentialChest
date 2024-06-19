@@ -8,12 +8,12 @@
 import Foundation
 
 struct CredentialItemUseCase {
-    let repository: CredentialItemRepository
+    let repository: BasicCredentialItemRepository
 }
 
 extension CredentialItemUseCase {
     
-    func add(_ item: BasicCredentialItem) {
+    func add(_ item: CredentialItem) {
         repository.insert(item)
     }
     

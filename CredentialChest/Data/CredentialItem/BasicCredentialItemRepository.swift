@@ -34,6 +34,7 @@ struct BasicCredentialItemRepository: CredentialItemRepository {
             newItem.a = item.symbolColor.components.opacity
             
             manager.save()
+            print(newItem, " saved...")
         }
     }
     

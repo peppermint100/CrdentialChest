@@ -18,7 +18,10 @@ struct BasicCredentialItem: CredentialItem, Identifiable {
     
     var password: String
     
-    init(id: UUID, title: String, memo: String, symbolString: String, symbolColor: Color, images: [UIImage], isPinned: Bool, password: String) {
+    init(
+        id: UUID = UUID(), title: String = "기본", memo: String = "기본 메모", symbolString: String = "airplane",
+        symbolColor: Color = Color.blue, images: [UIImage] = [], isPinned: Bool = false,
+        password: String = "") {
         self.id = id
         self.title = title
         self.memo = memo
